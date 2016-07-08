@@ -2,7 +2,7 @@ import { takeEvery } from 'redux-saga';
 import { call, put } from 'redux-saga/effects';
 
 
-export function sagasBuilder(request, REQUEST, actions) {
+export default function sagasBuilder(request, REQUEST, actions) {
   function* makeRequest({ type, payload }) {
     try {
       yield put(actions.pending());

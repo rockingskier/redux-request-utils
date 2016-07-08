@@ -1,13 +1,13 @@
-import { constantsBuilder } from './constantsBuilder.js';
-import { actionsBuilder } from './actionsBuilder.js';
-import { sagasBuilder } from './sagasBuilder.js';
+import constantsBuilder from './constantsBuilder.js';
+import actionsBuilder from './actionsBuilder.js';
+import sagasBuilder from './sagasBuilder.js';
 
 const defaultOptions = {
   namespace: false,
   flattenExports: false,
 };
 
-export function requestWrapper(request, constantCreator, options = {}) {
+export default function requestWrapper(request, constantCreator, options = {}) {
   options = {
     ...defaultOptions,
     ...options,

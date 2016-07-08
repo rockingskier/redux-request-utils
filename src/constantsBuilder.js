@@ -1,4 +1,4 @@
-export function constantsBuilder(constantCreator, namespace) {
+export default function constantsBuilder(constantCreator, namespace) {
   if (namespace) {
     constantCreator = constantCreator.createChild(namespace);
   }
