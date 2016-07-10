@@ -9,7 +9,7 @@ module.exports = {
   },
   env: {
     es6: true,
-    browser: false,
+    browser: true,
     node: true
   },
   globals: {
