@@ -8,12 +8,14 @@ const defaultOptions = {
 };
 
 export default function requestWrapper(request, constantCreator, options = {}) {
-  options = {
+  const {
+    namespace,
+    flattenExports,
+  } = {
     ...defaultOptions,
     ...options,
   };
 
-  const { namespace } = options;
   if (namespace) {
     constantCreator = constantCreator.createChild(namespace);
   }
@@ -47,7 +49,7 @@ export default function requestWrapper(request, constantCreator, options = {}) {
     [namespace ? `watchFor${namespaceTitle}Request` : 'watchForRequest']: sagas.watchForRequest,
   };
 
-  if (options.flattenExports) {
+  if (flattenExports) {
     return {
       ...constants,
       ...actions,
