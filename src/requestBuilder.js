@@ -10,12 +10,27 @@ export default function requestBuilder(url, requestOpts = {}, { handleResponse =
       ...requestOpts,
     };
 
+    let headers = {};
+
+    if (meta.authToken) {
+      headers['Authorization'] = `Bearer ${meta.authToken}`;
+    }
+    if (typeof callOpts.headers === 'function') {
+      headers = callOpts.headers(headers, payload, meta);
+    }
+    if (headers.Authorization) {
+      headers['Access-Control-Allow-Credentials'] = true;
+      callOpts.credentials = 'include';
+    }
+
     if (typeof callOpts.body === 'function') {
       callOpts.body = callOpts.body(...args);
     }
     if (typeof callOpts.body !== 'undefined' && typeof callOpts.body !== 'string') {
       callOpts.body = JSON.stringify(callOpts.body);
     }
+
+    callOpts.headers = headers;
 
     return fetch(callUrl, callOpts)
       .then((response) => {
