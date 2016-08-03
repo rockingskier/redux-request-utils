@@ -2,6 +2,7 @@ import { normalize } from 'normalizr';
 import HttpError from 'standard-http-error';
 
 
+const hasBody = ['POST', 'PUT', 'PATCH'];
 
 export default function requestBuilder(url, requestOpts = {}, { handleResponse = false, normalizeSchema = false, handleError = false } = {}) {
   return (payload, meta = {}) => {
@@ -11,6 +12,7 @@ export default function requestBuilder(url, requestOpts = {}, { handleResponse =
     };
 
     let headers = {};
+    let body = hasBody.includes(requestOpts.method) ? payload : undefined;
 
     if (meta.authToken) {
       headers['Authorization'] = `Bearer ${meta.authToken}`;
@@ -24,13 +26,16 @@ export default function requestBuilder(url, requestOpts = {}, { handleResponse =
     }
 
     if (typeof callOpts.body === 'function') {
-      callOpts.body = callOpts.body(...args);
+      body = callOpts.body(body, meta);
     }
-    if (typeof callOpts.body !== 'undefined' && typeof callOpts.body !== 'string') {
-      callOpts.body = JSON.stringify(callOpts.body);
+    if (typeof body !== 'undefined' && typeof body !== 'string') {
+      body = JSON.stringify(body);
+      headers['Accept'] = 'application/json';
+      headers['Content-Type'] = 'application/json';
     }
 
     callOpts.headers = headers;
+    callOpts.body = body;
 
     return fetch(callUrl, callOpts)
       .then((response) => {
