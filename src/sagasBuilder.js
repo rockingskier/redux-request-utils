@@ -2,7 +2,7 @@ import { takeEvery } from 'redux-saga';
 import { call, put } from 'redux-saga/effects';
 
 
-export default function sagasBuilder(request, REQUEST, actions) {
+export default function sagasBuilder(request, REQUEST, actions, { throwErrors }) {
   function* makeRequest({ payload, meta }) {
     let data;
     let error;
@@ -14,6 +14,9 @@ export default function sagasBuilder(request, REQUEST, actions) {
     } catch (err) {
       error = err;
       yield put(actions.failure(error));
+      if (throwErrors) {
+        throw error;
+      }
     }
 
     return {
