@@ -112,10 +112,40 @@ describe('requestWrapper', () => {
     });
 
     it('should export sagas', () => {
-      expect(result).to.have.property('actions');
+      expect(result).to.have.property('sagas');
       const { sagas } = result;
       expect(sagas).to.have.property('makeRequest');
       expect(sagas).to.have.property('watchForRequest');
+    });
+  });
+
+  describe('named exports', () => {
+    let result;
+
+    beforeEach(() => {
+      result = requestWrapper(request, constantCreator, { namedExports: true, namespace: 'namespace' });
+    });
+
+    it('should export constants', () => {
+      const { constants } = result;
+      expect(constants).to.have.property('NAMESPACE_REQUEST');
+      expect(constants).to.have.property('NAMESPACE_PENDING');
+      expect(constants).to.have.property('NAMESPACE_SUCCESS');
+      expect(constants).to.have.property('NAMESPACE_FAILURE');
+    });
+
+    it('should export actions', () => {
+      const { actions } = result;
+      expect(actions).to.have.property('namespaceRequest');
+      expect(actions).to.have.property('namespacePending');
+      expect(actions).to.have.property('namespaceSuccess');
+      expect(actions).to.have.property('namespaceFailure');
+    });
+
+    it('should export sagas', () => {
+      const { sagas } = result;
+      expect(sagas).to.have.property('makeNamespaceRequest');
+      expect(sagas).to.have.property('watchForNamespaceRequest');
     });
   });
 
@@ -127,6 +157,7 @@ describe('requestWrapper', () => {
     });
 
     it('should export constants', () => {
+      expect(result).to.not.have.property('constants');
       expect(result).to.have.property('REQUEST');
       expect(result).to.have.property('PENDING');
       expect(result).to.have.property('SUCCESS');
@@ -134,6 +165,7 @@ describe('requestWrapper', () => {
     });
 
     it('should export actions', () => {
+      expect(result).to.not.have.property('actions');
       expect(result).to.have.property('request');
       expect(result).to.have.property('pending');
       expect(result).to.have.property('success');
@@ -141,33 +173,7 @@ describe('requestWrapper', () => {
     });
 
     it('should export sagas', () => {
-      expect(result).to.have.property('makeRequest');
-      expect(result).to.have.property('watchForRequest');
-    });
-  });
-
-  describe('flattened namespaced exports', () => {
-    let result;
-
-    beforeEach(() => {
-      result = requestWrapper(request, constantCreator, { namespace: 'namespace', flattenExports: true });
-    });
-
-    it('should export constants', () => {
-      expect(result).to.have.property('REQUEST');
-      expect(result).to.have.property('PENDING');
-      expect(result).to.have.property('SUCCESS');
-      expect(result).to.have.property('FAILURE');
-    });
-
-    it('should export actions', () => {
-      expect(result).to.have.property('request');
-      expect(result).to.have.property('pending');
-      expect(result).to.have.property('success');
-      expect(result).to.have.property('failure');
-    });
-
-    it('should export sagas', () => {
+      expect(result).to.not.have.property('sagas');
       expect(result).to.have.property('makeRequest');
       expect(result).to.have.property('watchForRequest');
     });
