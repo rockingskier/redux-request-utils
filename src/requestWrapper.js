@@ -6,6 +6,7 @@ const defaultOptions = {
   namespace: false,
   namedExports: false,
   flattenExports: false,
+  throwErrors: false,
 };
 
 export default function requestWrapper(request, constantCreator, options = {}) {
@@ -13,6 +14,7 @@ export default function requestWrapper(request, constantCreator, options = {}) {
     namespace,
     namedExports,
     flattenExports,
+    throwErrors,
   } = {
     ...defaultOptions,
     ...options,
@@ -36,7 +38,7 @@ export default function requestWrapper(request, constantCreator, options = {}) {
   let actions = actionsBuilder(constants);
 
   // Sagas
-  let sagas = sagasBuilder(request, constants.REQUEST, actions);
+  let sagas = sagasBuilder(request, constants.REQUEST, actions, { throwErrors });
 
   constants = {
     [namedExports ? `${namespaceUpper}_REQUEST` : 'REQUEST']: constants.REQUEST,
