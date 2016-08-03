@@ -31,6 +31,7 @@
     "test": "npm run test:mocha",
     "test:covered": "babel-node node_modules/.bin/isparta cover --root ./src/ --report text --report html node_modules/.bin/_mocha --  ./src/**/__tests__/*.js --require babel-polyfill",
     "test:mocha": "mocha ./src/**/__tests__/*.js --compilers js:babel-register --require babel-polyfill",
+    "test:watch": "npm run test -- -- --watch"
   },
   "author": "",
   "license": "ISC",
