@@ -4,8 +4,8 @@ import HttpError from 'standard-http-error';
 
 export default function requestBuilder(url, requestOpts = {}, { handleResponse = false, normalizeSchema = false, handleError = false } = {}) {
   return (...args) => {
-    url = typeof url === 'function' ? url(...args) : url;
 
+    const callUrl = typeof url === 'function' ? url(payload, meta) : url;
     const callOpts = {
       ...requestOpts,
     };
@@ -17,7 +17,7 @@ export default function requestBuilder(url, requestOpts = {}, { handleResponse =
       callOpts.body = JSON.stringify(callOpts.body);
     }
 
-    return fetch(url, callOpts)
+    return fetch(callUrl, callOpts)
       .then((response) => {
         switch (response.status) {
           case 200:
