@@ -4,17 +4,23 @@ import sagasBuilder from './sagasBuilder.js';
 
 const defaultOptions = {
   namespace: false,
+  namedExports: false,
   flattenExports: false,
 };
 
 export default function requestWrapper(request, constantCreator, options = {}) {
   const {
     namespace,
+    namedExports,
     flattenExports,
   } = {
     ...defaultOptions,
     ...options,
   };
+
+  if (namedExports && !namespace) {
+    throw new Error('Namespaced exports require a namespace');
+  }
 
   if (namespace) {
     constantCreator = constantCreator.createChild(namespace);
@@ -33,20 +39,20 @@ export default function requestWrapper(request, constantCreator, options = {}) {
   let sagas = sagasBuilder(request, constants.REQUEST, actions);
 
   constants = {
-    [namespace ? `${namespaceUpper}_REQUEST` : 'REQUEST']: constants.REQUEST,
-    [namespace ? `${namespaceUpper}_PENDING` : 'PENDING']: constants.PENDING,
-    [namespace ? `${namespaceUpper}_SUCCESS` : 'SUCCESS']: constants.SUCCESS,
-    [namespace ? `${namespaceUpper}_FAILURE` : 'FAILURE']: constants.FAILURE,
+    [namedExports ? `${namespaceUpper}_REQUEST` : 'REQUEST']: constants.REQUEST,
+    [namedExports ? `${namespaceUpper}_PENDING` : 'PENDING']: constants.PENDING,
+    [namedExports ? `${namespaceUpper}_SUCCESS` : 'SUCCESS']: constants.SUCCESS,
+    [namedExports ? `${namespaceUpper}_FAILURE` : 'FAILURE']: constants.FAILURE,
   };
   actions = {
-    [namespace ? `${namespace}Request` : 'request']: actions.request,
-    [namespace ? `${namespace}Pending` : 'pending']: actions.pending,
-    [namespace ? `${namespace}Success` : 'success']: actions.success,
-    [namespace ? `${namespace}Failure` : 'failure']: actions.failure,
+    [namedExports ? `${namespace}Request` : 'request']: actions.request,
+    [namedExports ? `${namespace}Pending` : 'pending']: actions.pending,
+    [namedExports ? `${namespace}Success` : 'success']: actions.success,
+    [namedExports ? `${namespace}Failure` : 'failure']: actions.failure,
   };
   sagas = {
-    [namespace ? `request${namespaceTitle}` : 'makeRequest']: sagas.makeRequest,
-    [namespace ? `watchFor${namespaceTitle}Request` : 'watchForRequest']: sagas.watchForRequest,
+    [namedExports ? `make${namespaceTitle}Request` : 'makeRequest']: sagas.makeRequest,
+    [namedExports ? `watchFor${namespaceTitle}Request` : 'watchForRequest']: sagas.watchForRequest,
   };
 
   if (flattenExports) {
