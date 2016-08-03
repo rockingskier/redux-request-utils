@@ -126,6 +126,14 @@ describe('requestWrapper', () => {
       result = requestWrapper(request, constantCreator, { namedExports: true, namespace: 'namespace' });
     });
 
+    it('should throw an error if no "namespace" is provided', () => {
+      try {
+        requestWrapper(request, constantCreator, { namedExports: true, namespace: undefined });
+      } catch(err) {
+        expect(err.message).to.equal('Namespaced exports require a namespace');
+      }
+    });
+
     it('should export constants', () => {
       const { constants } = result;
       expect(constants).to.have.property('NAMESPACE_REQUEST');
