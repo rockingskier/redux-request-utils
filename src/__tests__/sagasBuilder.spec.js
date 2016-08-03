@@ -63,6 +63,9 @@ describe('sagasBuilder', () => {
 
       generated = generator.next();
       expect(generated.done).to.be.true;
+
+      expect(generated.value.data).to.deep.equal(response);
+      expect(generated.value.error).to.be.undefined;
     });
 
     it('should call `pending`, make the request and call `error` if there is a problem', () => {
@@ -79,6 +82,10 @@ describe('sagasBuilder', () => {
 
       generated = generator.next();
       expect(generated.done).to.be.true;
+
+      expect(generated.value.data).to.be.undefined;
+      expect(generated.value.error).to.be.an('error');
+      expect(generated.value.error.message).to.equal('Something went wrong');
     });
   });
 
