@@ -54,7 +54,7 @@ describe('sagasBuilder', () => {
       expect(generated.done).to.be.false;
 
       generated = generator.next();
-      expect(generated.value).to.deep.equal(effects.call(request, payload));
+      expect(generated.value).to.deep.equal(effects.call(request, payload, undefined));
       expect(generated.done).to.be.false;
 
       generated = generator.next(response);
