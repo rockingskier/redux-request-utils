@@ -3,14 +3,23 @@ import { call, put } from 'redux-saga/effects';
 
 
 export default function sagasBuilder(request, REQUEST, actions) {
-  function* makeRequest({ type, payload }) {
+  function* makeRequest({ payload, meta }) {
+    let data;
+    let error;
+
     try {
       yield put(actions.pending());
-      const data = yield call(request, payload);
+      data = yield call(request, payload, meta);
       yield put(actions.success(data));
     } catch (err) {
-      yield put(actions.failure(err));
+      error = err;
+      yield put(actions.failure(error));
     }
+
+    return {
+      data,
+      error,
+    };
   }
 
   function* watchForRequest() {
