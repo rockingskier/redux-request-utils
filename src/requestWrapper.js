@@ -1,6 +1,7 @@
-import constantsBuilder from './constantsBuilder.js';
-import actionsBuilder from './actionsBuilder.js';
-import sagasBuilder from './sagasBuilder.js';
+import { constantsBuilder } from './constantsBuilder.js';
+import { actionsBuilder } from './actionsBuilder.js';
+import { sagasBuilder } from './sagasBuilder.js';
+
 
 const defaultOptions = {
   namespace: false,
@@ -9,7 +10,7 @@ const defaultOptions = {
   throwErrors: false,
 };
 
-export default function requestWrapper(request, constantCreator, options = {}) {
+export function requestWrapper(request, constantCreator, options = {}) {
   const {
     namespace,
     namedExports,

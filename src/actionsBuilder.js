@@ -5,7 +5,7 @@ const payloadCreator = (payload) => payload;
 const metaCreator = (payload, meta) => meta;
 
 
-export default function actionsBuilder(constants) {
+export function actionsBuilder(constants) {
   return {
     request: createAction(constants.REQUEST, payloadCreator, metaCreator),
     pending: createAction(constants.PENDING, payloadCreator, metaCreator),
