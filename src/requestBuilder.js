@@ -2,9 +2,9 @@ import { normalize } from 'normalizr';
 import HttpError from 'standard-http-error';
 
 
-export default function requestBuilder(url, requestOpts = {}, { handleResponse = false, normalizeSchema = false, handleError = false } = {}) {
-  return (...args) => {
 
+export default function requestBuilder(url, requestOpts = {}, { handleResponse = false, normalizeSchema = false, handleError = false } = {}) {
+  return (payload, meta = {}) => {
     const callUrl = typeof url === 'function' ? url(payload, meta) : url;
     const callOpts = {
       ...requestOpts,
@@ -27,8 +27,10 @@ export default function requestBuilder(url, requestOpts = {}, { handleResponse =
             throw new HttpError(response.status, { response });
         }
       })
-      .then((response) => handleResponse ? handleResponse(response, ...args) : response.json())
+      .then((response) => handleResponse ? handleResponse(response, payload, meta) : response.json())
       .then((data) => normalizeSchema ? normalize(data, normalizeSchema) : data)
-      .catch(handleError ? (err) => handleError(err, ...args) : (err) => { throw err; });
+      .catch(handleError ? (err) => handleError(err, payload, meta) : (err) => {
+        throw err;
+      });
   };
 }
