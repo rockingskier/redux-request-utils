@@ -17,12 +17,12 @@ export function sagasBuilder(request, REQUEST, actions, options = {}) {
     let error;
 
     try {
-      yield put(actions.pending());
+      yield put(actions.pending(payload, meta));
       data = yield call(request, payload, meta);
-      yield put(actions.success(data));
+      yield put(actions.success(data, meta));
     } catch (err) {
       error = err;
-      yield put(actions.failure(error));
+      yield put(actions.failure(error, meta));
       if (throwErrors) {
         throw error;
       }
