@@ -4,12 +4,16 @@ import { createAction } from 'redux-actions';
 const payloadCreator = (payload) => payload;
 const metaCreator = (payload, meta) => meta;
 
+export function actionBuilder(constant) {
+  return createAction(constant, payloadCreator, metaCreator);
+}
+
 
 export function actionsBuilder(constants) {
   return {
-    request: createAction(constants.REQUEST, payloadCreator, metaCreator),
-    pending: createAction(constants.PENDING, payloadCreator, metaCreator),
-    success: createAction(constants.SUCCESS, payloadCreator, metaCreator),
-    failure: createAction(constants.FAILURE, payloadCreator, metaCreator),
+    request: actionBuilder(constants.REQUEST),
+    pending: actionBuilder(constants.PENDING),
+    success: actionBuilder(constants.SUCCESS),
+    failure: actionBuilder(constants.FAILURE),
   };
 }
