@@ -10,6 +10,7 @@ const defaultOptions = {
   throwErrors: false,
 };
 
+
 export function requestWrapper(request, constantCreator, options = {}) {
   const {
     namespace,

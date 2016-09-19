@@ -4,6 +4,7 @@ import HttpError from 'standard-http-error';
 
 const hasBody = ['POST', 'PUT', 'PATCH'];
 
+
 export function requestBuilder(url, requestOpts = {}, { handleResponse = false, normalizeSchema = false, handleError = false } = {}) {
   return (payload, meta = {}) => {
     const callUrl = typeof url === 'function' ? url(payload, meta) : url;
