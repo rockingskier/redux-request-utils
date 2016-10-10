@@ -1,20 +1,21 @@
-import { normalize } from 'normalizr';
 import HttpError from 'standard-http-error';
 
 
-const hasBody = ['POST', 'PUT', 'PATCH'];
+const methodsWithBodies = ['POST', 'PUT', 'PATCH'];
 
 
-export function requestBuilder(url, requestOpts = {}, { handleResponse = false, normalizeSchema = false, handleError = false } = {}) {
+export function requestBuilder(url, requestOpts = {}, { handleResponse = false, handleSuccess = false, handleError = false } = {}) {
   return (payload, meta = {}) => {
+    // Build the URL
     const callUrl = typeof url === 'function' ? url(payload, meta) : url;
+
+    // Options to pass to the `fetch` request
     const callOpts = {
       ...requestOpts,
     };
 
+    // Headers
     let headers = {};
-    let body = hasBody.includes(requestOpts.method) ? payload : undefined;
-
     if (meta.authToken) {
       headers['Authorization'] = `Bearer ${meta.authToken}`;
     }
@@ -26,6 +27,8 @@ export function requestBuilder(url, requestOpts = {}, { handleResponse = false, 
       callOpts.credentials = 'include';
     }
 
+    // Body
+    let body = methodsWithBodies.includes(requestOpts.method) ? payload : undefined;
     if (typeof callOpts.body === 'function') {
       body = callOpts.body(body, meta);
     }
@@ -49,9 +52,7 @@ export function requestBuilder(url, requestOpts = {}, { handleResponse = false, 
         }
       })
       .then((response) => handleResponse ? handleResponse(response, payload, meta) : response.json())
-      .then((data) => normalizeSchema ? normalize(data, normalizeSchema) : data)
-      .catch(handleError ? (err) => handleError(err, payload, meta) : (err) => {
-        throw err;
-      });
+      .then((data) => handleSuccess ? handleSuccess(data, payload, meta) : data)
+      .catch(handleError ? (err) => handleError(err, payload, meta) : (err) => { throw err; });
   };
 }
