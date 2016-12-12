@@ -17,7 +17,7 @@ export function requestBuilder(url, requestOpts = {}, { handleResponse = false, 
     // Headers
     let headers = {};
     if (meta.authToken) {
-      headers['Authorization'] = `Bearer ${meta.authToken}`;
+      headers['Authorization'] = meta.authToken;
     }
     if (typeof callOpts.headers === 'function') {
       headers = callOpts.headers(headers, payload, meta);
