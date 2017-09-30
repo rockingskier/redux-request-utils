@@ -1,5 +1,6 @@
-import { takeEvery } from 'redux-saga';
-import { call, put } from 'redux-saga/effects';
+import 'regenerator-runtime/runtime';
+
+import { call, put, takeEvery } from 'redux-saga/effects';
 
 
 const defaultOptions = {
